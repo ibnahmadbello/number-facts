@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">NumberIsFun</string>
+
+    <string name="search_number">Search</string>
+
+    <string name="delete_search">Delete All Search</string>
+
+
 </resources>
