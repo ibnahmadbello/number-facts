@@ -5,5 +5,9 @@
 
     <string name="delete_search">Delete All Search</string>
 
+    <string name="search_hint">Enter a number to search</string>
+
+    <string name="previous_search_result">Your previous searches will appear here:</string>
+
 
 </resources>
