@@ -7,12 +7,19 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.regent.tech.numberisfun.Utilities.NetworkUtils;
+import com.regent.tech.numberisfun.Utilities.NumberQueryTask;
+
+import java.net.URL;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText mSearchBoxEditText;
     private TextView mQueryText;
     private TextView mQueryResult;
     private TextView mPreviousSearch;
+
+    NumberQueryTask queryTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         mPreviousSearch = findViewById(R.id.previous_search);
 
+        queryTask = new NumberQueryTask();
     }
 
     @Override
@@ -43,11 +51,20 @@ public class MainActivity extends AppCompatActivity {
                 // TODO: Make the search history to delete
                 break;
             case R.id.action_search:
-                // TODO: Make the search to happen
+                makeNumberQuerySearch();
                 break;
         }
 
         return super.onOptionsItemSelected(menuItem);
     }
 
+    public void showResult(String numberQueryResult){
+        mQueryResult.setText(numberQueryResult);
+    }
+
+    private void makeNumberQuerySearch(){
+        String numberQuery = mSearchBoxEditText.getText().toString();
+        URL numberQueryURl = NetworkUtils.buildUrl(numberQuery);
+        queryTask.execute(numberQueryURl);
+    }
 }
