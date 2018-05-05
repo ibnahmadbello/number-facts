@@ -1,5 +1,6 @@
 package com.regent.tech.numberisfun;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,8 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.regent.tech.numberisfun.Utilities.NetworkUtils;
-import com.regent.tech.numberisfun.Utilities.NumberQueryTask;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView mQueryText;
     private TextView mQueryResult;
     private TextView mPreviousSearch;
-
-    NumberQueryTask queryTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         mPreviousSearch = findViewById(R.id.previous_search);
 
-        queryTask = new NumberQueryTask();
     }
 
     @Override
@@ -65,6 +63,35 @@ public class MainActivity extends AppCompatActivity {
     private void makeNumberQuerySearch(){
         String numberQuery = mSearchBoxEditText.getText().toString();
         URL numberQueryURl = NetworkUtils.buildUrl(numberQuery);
-        queryTask.execute(numberQueryURl);
+        new NumberQueryTask().execute(numberQuery);
     }
+
+    class NumberQueryTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute(){super.onPreExecute();}
+
+        @Override
+        protected String doInBackground(String... params) {
+            String searchUrl = params[0];
+            String numberQueryResult = null;
+            URL numberRequestURl = NetworkUtils.buildUrl(searchUrl);
+
+            try {
+                numberQueryResult = NetworkUtils.getResponseFromHttpUrl(numberRequestURl);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+            return numberQueryResult;
+        }
+
+        @Override
+        protected void onPostExecute(String numberQueryResult){
+            if (numberQueryResult != null && !numberQueryResult.equals("")){
+                showResult(numberQueryResult);
+            }
+        }
+    }
+
+
 }

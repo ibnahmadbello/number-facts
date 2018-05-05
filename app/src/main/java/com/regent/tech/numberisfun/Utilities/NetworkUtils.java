@@ -11,7 +11,9 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    final static String NUMBERAPI_BASE_URL = "numbersapi.com";
+    public static final String TAG = NetworkUtils.class.getSimpleName();
+
+    final static String NUMBERAPI_BASE_URL = "http://numbersapi.com";
 
     public static URL buildUrl(String numberQuery){
         Uri builtUri = Uri.parse(NUMBERAPI_BASE_URL).buildUpon()
@@ -25,6 +27,7 @@ public class NetworkUtils {
             e.printStackTrace();
         }
 
+        android.util.Log.v(TAG, "Built Url: " + url);
         return url;
     }
 
