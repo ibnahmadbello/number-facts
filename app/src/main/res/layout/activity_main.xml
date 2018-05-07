@@ -12,14 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search_hint"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_right"
         android:inputType="number"/>
 
-    <TextView
-        android:id="@+id/search_query"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="22sp"/>
+        android:layout_marginRight="@dimen/margin_right"
+        android:layout_marginLeft="@dimen/margin_left">
 
     <TextView
         android:id="@+id/search_result"
@@ -28,10 +29,35 @@
         android:textSize="22sp"/>
 
     <TextView
+        android:id="@+id/error_message_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"/>
+
+    <ProgressBar
+        android:id="@+id/progress_indicator"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"/>
+
+    </FrameLayout>
+
+    <TextView
         android:id="@+id/previous_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/previous_search_result"
-        android:textSize="22sp"/>
+        android:textSize="22sp"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_right"/>
+
+    <View
+        android:id="@+id/horizontal_line_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_right"/>
 
 </LinearLayout>

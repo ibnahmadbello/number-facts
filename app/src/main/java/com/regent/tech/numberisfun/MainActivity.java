@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.regent.tech.numberisfun.Utilities.NetworkUtils;
@@ -16,8 +18,9 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
 
     private EditText mSearchBoxEditText;
-    private TextView mQueryText;
     private TextView mQueryResult;
+    private TextView mErrorMessage;
+    private ProgressBar mProgressBar;
     private TextView mPreviousSearch;
 
     @Override
@@ -27,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
 
         mSearchBoxEditText = findViewById(R.id.search_box);
 
-        mQueryText = findViewById(R.id.search_query);
-
         mQueryResult = findViewById(R.id.search_result);
 
         mPreviousSearch = findViewById(R.id.previous_search);
+
+        mErrorMessage = findViewById(R.id.error_message_display);
+
+        mProgressBar = findViewById(R.id.progress_indicator);
 
     }
 
@@ -57,19 +62,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showResult(String numberQueryResult){
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mErrorMessage.setVisibility(View.INVISIBLE);
+        mSearchBoxEditText.setText("");
+        mSearchBoxEditText.setEnabled(true);
+        mQueryResult.setVisibility(View.VISIBLE);
         mQueryResult.setText(numberQueryResult);
     }
 
     private void makeNumberQuerySearch(){
         String numberQuery = mSearchBoxEditText.getText().toString();
-        URL numberQueryURl = NetworkUtils.buildUrl(numberQuery);
         new NumberQueryTask().execute(numberQuery);
     }
 
     class NumberQueryTask extends AsyncTask<String, Void, String> {
 
         @Override
-        protected void onPreExecute(){super.onPreExecute();}
+        protected void onPreExecute(){
+            super.onPreExecute();
+            preloading();
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -89,8 +101,20 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String numberQueryResult){
             if (numberQueryResult != null && !numberQueryResult.equals("")){
                 showResult(numberQueryResult);
+            } else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mQueryResult.setVisibility(View.INVISIBLE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+                mErrorMessage.setText(R.string.error_message);
             }
         }
+    }
+
+    private void preloading(){
+        mProgressBar.setVisibility(View.VISIBLE);
+        mQueryResult.setVisibility(View.INVISIBLE);
+        mErrorMessage.setVisibility(View.INVISIBLE);
+        mSearchBoxEditText.setEnabled(false);
     }
 
 
