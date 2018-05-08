@@ -3,6 +3,7 @@ package com.regent.tech.numberisfun;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeNumberQuerySearch(){
         String numberQuery = mSearchBoxEditText.getText().toString();
+        if (TextUtils.isEmpty(numberQuery)){
+            mErrorMessage.setText("No query entered, nothing to search for.");
+            return;
+        }
         new NumberQueryTask().execute(numberQuery);
     }
 
