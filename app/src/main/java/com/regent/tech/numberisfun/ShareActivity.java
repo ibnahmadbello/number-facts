@@ -1,6 +1,7 @@
 package com.regent.tech.numberisfun;
 
 import android.content.Intent;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,9 +40,29 @@ public class ShareActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home){
-            onBackPressed();
+        switch (id){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_share:
+                shareText();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
+
+    private void shareText(){
+        String textToShare = factTextView.getText().toString().trim();
+        String mimeType = "text/plain";
+        String title = "Number Fact";
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setType(mimeType)
+                .setChooserTitle(title)
+                .setText(textToShare)
+                .startChooser();
+    }
 }
+
+

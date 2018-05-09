@@ -10,9 +10,9 @@
 
     <TextView
         android:id="@+id/shared_number_fact"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="@tools:sample/lorem"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_vertical|center|center_horizontal" />
 
 </LinearLayout>
