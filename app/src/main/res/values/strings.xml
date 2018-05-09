@@ -13,4 +13,6 @@
 
     <string name="share">Share</string>
 
+    <string name="empty_text_view">No query entered, nothing to search for.</string>
+
 </resources>

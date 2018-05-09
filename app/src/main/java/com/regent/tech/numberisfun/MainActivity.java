@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements
     private void makeNumberQuerySearch(){
         String numberQuery = mSearchBoxEditText.getText().toString();
         if (TextUtils.isEmpty(numberQuery)){
-            mErrorMessage.setText("No query entered, nothing to search for.");
+            mErrorMessage.setText(R.string.empty_text_view);
             return;
         }
 
