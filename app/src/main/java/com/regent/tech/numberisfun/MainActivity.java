@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 mProgressBar.setVisibility(View.VISIBLE);
+                preloading();
 
                 forceLoad();
 
@@ -195,12 +196,14 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    */
+
     private void preloading(){
         mProgressBar.setVisibility(View.VISIBLE);
         mQueryResult.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.INVISIBLE);
         mSearchBoxEditText.setEnabled(false);
-    }*/
+    }
 
 
 }
