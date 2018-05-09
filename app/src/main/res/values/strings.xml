@@ -11,4 +11,8 @@
 
     <string name="error_message">Error while fetching Number fact</string>
 
+    <string name="share">Share</string>
+
+    <string name="empty_text_view">No query entered, nothing to search for.</string>
+
 </resources>

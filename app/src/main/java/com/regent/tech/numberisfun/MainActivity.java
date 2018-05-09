@@ -1,6 +1,6 @@
 package com.regent.tech.numberisfun;
 
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<String>{
+        LoaderManager.LoaderCallbacks<String>, View.OnClickListener{
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements
         mSearchBoxEditText = findViewById(R.id.search_box);
 
         mQueryResult = findViewById(R.id.search_result);
+        mQueryResult.setOnClickListener(this);
 
         mPreviousSearch = findViewById(R.id.previous_search);
 
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements
     private void makeNumberQuerySearch(){
         String numberQuery = mSearchBoxEditText.getText().toString();
         if (TextUtils.isEmpty(numberQuery)){
-            mErrorMessage.setText("No query entered, nothing to search for.");
+            mErrorMessage.setText(R.string.empty_text_view);
             return;
         }
 
@@ -206,4 +207,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.search_result){
+            if (mQueryResult.getText().toString().isEmpty()){
+                return;
+            }
+            Intent shareIntent = new Intent(this, ShareActivity.class);
+            String textToShare = mQueryResult.getText().toString();
+            shareIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
+            startActivity(shareIntent);
+        }
+    }
 }
