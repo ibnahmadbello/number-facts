@@ -11,4 +11,6 @@
 
     <string name="error_message">Error while fetching Number fact</string>
 
+    <string name="share">Share</string>
+
 </resources>

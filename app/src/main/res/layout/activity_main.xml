@@ -26,7 +26,8 @@
         android:id="@+id/search_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="22sp"/>
+        android:textSize="22sp"
+        android:onClick="openShareActivity"/>
 
     <TextView
         android:id="@+id/error_message_display"
