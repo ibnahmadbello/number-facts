@@ -210,6 +210,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.search_result){
+            if (mQueryResult.getText().toString().isEmpty()){
+                return;
+            }
             Intent shareIntent = new Intent(this, ShareActivity.class);
             String textToShare = mQueryResult.getText().toString();
             shareIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
