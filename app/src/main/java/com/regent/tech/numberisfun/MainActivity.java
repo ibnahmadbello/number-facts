@@ -19,17 +19,22 @@ import com.regent.tech.numberisfun.Utilities.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<String>, View.OnClickListener{
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
+    NumberSaving saving;
+    String fact;
     private EditText mSearchBoxEditText;
     private TextView mQueryResult;
     private TextView mErrorMessage;
     private ProgressBar mProgressBar;
     private TextView mPreviousSearch;
+
+    private TextView prefTextView;
 
     private static final int NUMBER_SEARCH_LOADER = 11;
 
@@ -37,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        saving = new NumberSaving(getApplicationContext());
 
         mSearchBoxEditText = findViewById(R.id.search_box);
 
@@ -48,6 +55,13 @@ public class MainActivity extends AppCompatActivity implements
         mErrorMessage = findViewById(R.id.error_message_display);
 
         mProgressBar = findViewById(R.id.progress_indicator);
+
+        prefTextView = findViewById(R.id.display_preference);
+
+        HashMap<String, String> hashMap = saving.getNumberFact();
+
+        fact = hashMap.get(NumberSaving.KEY_NUMBER_FACTS);
+        prefTextView.setText("\n");
 
         getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
 
@@ -81,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements
         mSearchBoxEditText.setEnabled(true);
         mQueryResult.setVisibility(View.VISIBLE);
         mQueryResult.setText(numberQueryResult);
+        saving.createSavingSession(numberQueryResult);
+        prefTextView.append(fact);
     }
 
     private void makeNumberQuerySearch(){

@@ -61,4 +61,9 @@
         android:layout_marginLeft="@dimen/margin_left"
         android:layout_marginRight="@dimen/margin_right"/>
 
+    <TextView
+        android:id="@+id/display_preference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
