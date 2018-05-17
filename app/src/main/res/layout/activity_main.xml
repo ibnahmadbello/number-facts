@@ -61,6 +61,12 @@
         android:layout_marginLeft="@dimen/margin_left"
         android:layout_marginRight="@dimen/margin_right"/>
 
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_right"
+        android:layout_marginLeft="@dimen/margin_left"
+        tools:text="@tools:sample/lorem"/>
 
 </LinearLayout>
