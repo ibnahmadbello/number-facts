@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
-    String fact;
+
     private EditText mSearchBoxEditText;
     private TextView mQueryResult;
     private TextView mErrorMessage;
