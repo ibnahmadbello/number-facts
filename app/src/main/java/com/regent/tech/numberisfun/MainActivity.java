@@ -1,5 +1,6 @@
 package com.regent.tech.numberisfun;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.regent.tech.numberisfun.Data.NumberContract;
 import com.regent.tech.numberisfun.Data.NumberDbHelper;
 import com.regent.tech.numberisfun.Utilities.NetworkUtils;
 
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<String>, View.OnClickListener{
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private NumberAdapter numberAdapter;
     private EditText mSearchBoxEditText;
@@ -74,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
         numberRecyclerView.setAdapter(numberAdapter);
 
 
-        getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
+//        getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
 
     }
 
@@ -106,6 +111,15 @@ public class MainActivity extends AppCompatActivity implements
         mSearchBoxEditText.setEnabled(true);
         mQueryResult.setVisibility(View.VISIBLE);
         mQueryResult.setText(numberQueryResult);
+        addNewFact(numberQueryResult);
+
+        // Update the cursor in the adapter to trigger UI to display the new list
+        numberAdapter.swapCursor(getNumberFact());
+
+        //clear UI text fields
+//        mSearchBoxEditText.clearFocus();
+//        mSearchBoxEditText.getText().clear();
+
     }
 
     private void makeNumberQuerySearch(){
@@ -244,4 +258,24 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(shareIntent);
         }
     }
+
+    public Cursor getNumberFact(){
+        return sqLiteDatabase.query(
+                NumberContract.NumberEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    private long addNewFact(String numberQueryResult){
+        ContentValues values = new ContentValues();
+        values.put(NumberContract.NumberEntry.COLUMN_RESULT, numberQueryResult);
+        Log.d(TAG, "The saved data is: " + numberQueryResult);
+        return sqLiteDatabase.insert(NumberContract.NumberEntry.TABLE_NAME, null, values);
+    }
+
 }

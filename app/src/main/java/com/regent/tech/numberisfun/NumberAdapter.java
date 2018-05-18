@@ -31,7 +31,7 @@ public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdap
 
     @Override
     public void onBindViewHolder(@NonNull NumberAdapter.NumberAdapterViewHolder holder, int position) {
-        if (mCursor.moveToPosition(position))
+        if (!mCursor.moveToPosition(position))
             return;
 
         String fact = mCursor.getString(mCursor.getColumnIndex(NumberContract.NumberEntry.COLUMN_RESULT));
