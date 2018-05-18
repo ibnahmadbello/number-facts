@@ -1,76 +1,66 @@
 package com.regent.tech.numberisfun;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.regent.tech.numberisfun.Data.NumberContract;
+
 public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdapterViewHolder>{
 
-    private String numberData;
+    private Cursor mCursor;
+    private Context mContext;
 
-    /**
-     * An on-click handler that we've defined to make it easy for an Activity to interface with
-     * our RecyclerView
-     */
-    final private NumberAdapterOnClickHandler mClickHandler;
-
-    /**
-     * The interface that receives onClick messages.
-     */
-    public interface NumberAdapterOnClickHandler {
-        void onClick(int presentNumberData);
-    }
-
-    /**
-     * Creates a NumberAdapter.
-     *
-     * @param clickHandler The on-click handler for this adapter. This single handler is called
-     *                     when an item is clicked.
-     */
-    public NumberAdapter(NumberAdapterOnClickHandler clickHandler) {
-        mClickHandler = clickHandler;
-    }
-
-    /**
-     * Cache of the children views for a number list item
-     */
-    public class NumberAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public final TextView mNumberTextView;
-
-        public NumberAdapterViewHolder(View view){
-            super(view);
-            mNumberTextView = view.findViewById(R.id.fact_text_view);
-            view.setOnClickListener(this);
-        }
-
-        /**
-         * This gets called by the child views during a click.
-         *
-         * @param v The View that was clicked
-         */
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mClickHandler.onClick(adapterPosition);
-        }
+    public NumberAdapter(Context context, Cursor cursor){
+        this.mContext = context;
+        this.mCursor = cursor;
     }
 
     @NonNull
     @Override
     public NumberAdapter.NumberAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.number_list_item, parent, false);
+        return new NumberAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NumberAdapter.NumberAdapterViewHolder holder, int position) {
+        if (mCursor.moveToPosition(position))
+            return;
 
+        String fact = mCursor.getString(mCursor.getColumnIndex(NumberContract.NumberEntry.COLUMN_RESULT));
+        long id = mCursor.getLong(mCursor.getColumnIndex(NumberContract.NumberEntry._ID));
+
+        holder.factTextView.setText(fact);
+        holder.itemView.setTag(id);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mCursor.getCount();
+    }
+
+    public void swapCursor(Cursor newCursor){
+        if (mCursor != null)
+            mCursor.close();
+        if (newCursor != null)
+            this.notifyDataSetChanged();
+    }
+
+    class NumberAdapterViewHolder extends RecyclerView.ViewHolder{
+
+        TextView factTextView;
+
+        public NumberAdapterViewHolder(View itemView){
+            super(itemView);
+            factTextView = itemView.findViewById(R.id.fact_text_view);
+        }
+
     }
 }

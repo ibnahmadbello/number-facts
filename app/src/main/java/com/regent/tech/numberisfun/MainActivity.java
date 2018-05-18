@@ -1,12 +1,17 @@
 package com.regent.tech.numberisfun;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.regent.tech.numberisfun.Data.NumberDbHelper;
 import com.regent.tech.numberisfun.Utilities.NetworkUtils;
 
 import java.io.IOException;
@@ -26,12 +32,14 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
-
+    private NumberAdapter numberAdapter;
     private EditText mSearchBoxEditText;
     private TextView mQueryResult;
     private TextView mErrorMessage;
     private ProgressBar mProgressBar;
     private TextView mPreviousSearch;
+    RecyclerView numberRecyclerView;
+    private SQLiteDatabase sqLiteDatabase;
 
 
     private static final int NUMBER_SEARCH_LOADER = 11;
@@ -52,6 +60,18 @@ public class MainActivity extends AppCompatActivity implements
         mErrorMessage = findViewById(R.id.error_message_display);
 
         mProgressBar = findViewById(R.id.progress_indicator);
+
+        numberRecyclerView = findViewById(R.id.search_history);
+        numberRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        NumberDbHelper dbHelper = new NumberDbHelper(this);
+        sqLiteDatabase = dbHelper.getWritableDatabase();
+
+        Cursor cursor = getNumberFact();
+
+        numberAdapter = new NumberAdapter(this, cursor);
+
+        numberRecyclerView.setAdapter(numberAdapter);
 
 
         getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
@@ -152,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoadFinished(Loader<String> loader, String data) {
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
         mProgressBar.setVisibility(View.INVISIBLE);
         if (null == data){
             mErrorMessage.setVisibility(View.VISIBLE);
@@ -163,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<String> loader) {
 
     }
 
