@@ -29,7 +29,6 @@ import com.regent.tech.numberisfun.Utilities.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<String>, View.OnClickListener{
