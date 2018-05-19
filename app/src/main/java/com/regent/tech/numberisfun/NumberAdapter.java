@@ -49,6 +49,7 @@ public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdap
     public void swapCursor(Cursor newCursor){
         if (mCursor != null)
             mCursor.close();
+        mCursor = newCursor;
         if (newCursor != null)
             this.notifyDataSetChanged();
     }

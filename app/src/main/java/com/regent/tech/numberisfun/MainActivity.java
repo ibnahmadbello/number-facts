@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -78,8 +79,24 @@ public class MainActivity extends AppCompatActivity implements
 
         numberRecyclerView.setAdapter(numberAdapter);
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-//        getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                long id = (long) viewHolder.itemView.getTag();
+
+                removeNumber(id);
+
+                numberAdapter.swapCursor(getNumberFact());
+            }
+        }).attachToRecyclerView(numberRecyclerView);
+
+        getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
 
     }
 
@@ -276,6 +293,11 @@ public class MainActivity extends AppCompatActivity implements
         values.put(NumberContract.NumberEntry.COLUMN_RESULT, numberQueryResult);
         Log.d(TAG, "The saved data is: " + numberQueryResult);
         return sqLiteDatabase.insert(NumberContract.NumberEntry.TABLE_NAME, null, values);
+    }
+
+    private boolean removeNumber(long id){
+        return sqLiteDatabase.delete(NumberContract.NumberEntry.TABLE_NAME,
+                NumberContract.NumberEntry._ID + "=" + id, null) > 0;
     }
 
 }
