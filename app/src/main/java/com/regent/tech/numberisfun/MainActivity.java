@@ -1,13 +1,21 @@
 package com.regent.tech.numberisfun;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,26 +23,29 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.regent.tech.numberisfun.Data.NumberContract;
+import com.regent.tech.numberisfun.Data.NumberDbHelper;
 import com.regent.tech.numberisfun.Utilities.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<String>, View.OnClickListener{
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
-    NumberSaving saving;
-    String fact;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private NumberAdapter numberAdapter;
     private EditText mSearchBoxEditText;
     private TextView mQueryResult;
     private TextView mErrorMessage;
     private ProgressBar mProgressBar;
     private TextView mPreviousSearch;
+    RecyclerView numberRecyclerView;
+    private SQLiteDatabase sqLiteDatabase;
 
-    private TextView prefTextView;
 
     private static final int NUMBER_SEARCH_LOADER = 11;
 
@@ -43,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        saving = new NumberSaving(getApplicationContext());
 
         mSearchBoxEditText = findViewById(R.id.search_box);
 
@@ -56,12 +66,34 @@ public class MainActivity extends AppCompatActivity implements
 
         mProgressBar = findViewById(R.id.progress_indicator);
 
-        prefTextView = findViewById(R.id.display_preference);
+        numberRecyclerView = findViewById(R.id.search_history);
+        numberRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        HashMap<String, String> hashMap = saving.getNumberFact();
+        NumberDbHelper dbHelper = new NumberDbHelper(this);
+        sqLiteDatabase = dbHelper.getWritableDatabase();
 
-        fact = hashMap.get(NumberSaving.KEY_NUMBER_FACTS);
-        prefTextView.setText("\n");
+        Cursor cursor = getNumberFact();
+
+        numberAdapter = new NumberAdapter(this, cursor);
+
+        numberRecyclerView.setAdapter(numberAdapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                long id = (long) viewHolder.itemView.getTag();
+
+                removeNumber(id);
+
+                numberAdapter.swapCursor(getNumberFact());
+            }
+        }).attachToRecyclerView(numberRecyclerView);
 
         getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
 
@@ -95,8 +127,15 @@ public class MainActivity extends AppCompatActivity implements
         mSearchBoxEditText.setEnabled(true);
         mQueryResult.setVisibility(View.VISIBLE);
         mQueryResult.setText(numberQueryResult);
-        saving.createSavingSession(numberQueryResult);
-        prefTextView.append(fact);
+        addNewFact(numberQueryResult);
+
+        // Update the cursor in the adapter to trigger UI to display the new list
+        numberAdapter.swapCursor(getNumberFact());
+
+        //clear UI text fields
+//        mSearchBoxEditText.clearFocus();
+//        mSearchBoxEditText.getText().clear();
+
     }
 
     private void makeNumberQuerySearch(){
@@ -163,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoadFinished(Loader<String> loader, String data) {
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
         mProgressBar.setVisibility(View.INVISIBLE);
         if (null == data){
             mErrorMessage.setVisibility(View.VISIBLE);
@@ -174,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<String> loader) {
 
     }
 
@@ -235,4 +274,29 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(shareIntent);
         }
     }
+
+    public Cursor getNumberFact(){
+        return sqLiteDatabase.query(
+                NumberContract.NumberEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    private long addNewFact(String numberQueryResult){
+        ContentValues values = new ContentValues();
+        values.put(NumberContract.NumberEntry.COLUMN_RESULT, numberQueryResult);
+        Log.d(TAG, "The saved data is: " + numberQueryResult);
+        return sqLiteDatabase.insert(NumberContract.NumberEntry.TABLE_NAME, null, values);
+    }
+
+    private boolean removeNumber(long id){
+        return sqLiteDatabase.delete(NumberContract.NumberEntry.TABLE_NAME,
+                NumberContract.NumberEntry._ID + "=" + id, null) > 0;
+    }
+
 }
