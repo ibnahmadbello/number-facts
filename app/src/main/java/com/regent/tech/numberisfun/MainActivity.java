@@ -304,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(String numberData) {
         Intent startShareActivity = new Intent(this, ShareActivity.class);
+        startShareActivity.putExtra(Intent.EXTRA_TEXT, numberData);
         startActivity(startShareActivity);
     }
 }
