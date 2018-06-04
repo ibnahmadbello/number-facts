@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements
         }).attachToRecyclerView(numberRecyclerView);
 
 
+
+
         getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
 
     }

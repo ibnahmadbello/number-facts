@@ -42,7 +42,9 @@ public class ShareActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case android.R.id.home:
-                onBackPressed();
+                Intent homeActivity = new Intent(this, MainActivity.class);
+                startActivity(homeActivity);
+                finish();
                 return true;
             case R.id.action_share:
                 shareText();
@@ -63,6 +65,14 @@ public class ShareActivity extends AppCompatActivity {
                 .setText(textToShare)
                 .startChooser();
     }
+
+    @Override
+    public void onBackPressed(){
+        Intent homeActivity = new Intent(this, MainActivity.class);
+        startActivity(homeActivity);
+        finish();
+    }
+
 }
 
 
