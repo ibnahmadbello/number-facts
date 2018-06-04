@@ -31,8 +31,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<String>, View.OnClickListener,
-        NumberAdapter.NumberAdapterOnClickHandler{
+        LoaderManager.LoaderCallbacks<String>, View.OnClickListener{
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Cursor cursor = getNumberFact();
 
-        numberAdapter = new NumberAdapter(this, cursor, this);
+        numberAdapter = new NumberAdapter(this, cursor);
 
         numberRecyclerView.setAdapter(numberAdapter);
 
@@ -95,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements
                 numberAdapter.swapCursor(getNumberFact());
             }
         }).attachToRecyclerView(numberRecyclerView);
-
 
 
 
@@ -303,10 +301,10 @@ public class MainActivity extends AppCompatActivity implements
                 NumberContract.NumberEntry._ID + "=" + id, null) > 0;
     }
 
-    @Override
+    /*@Override
     public void onClick(String numberData) {
         Intent startShareActivity = new Intent(this, ShareActivity.class);
         startShareActivity.putExtra(Intent.EXTRA_TEXT, numberData);
         startActivity(startShareActivity);
-    }
+    }*/
 }

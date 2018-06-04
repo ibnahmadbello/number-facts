@@ -16,20 +16,20 @@ public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdap
     private Cursor mCursor;
     private Context mContext;
 
-    private String mNumberData;
+    /*private String mNumberData;
 
     private final NumberAdapterOnClickHandler mClickHandler;
 
     public interface NumberAdapterOnClickHandler{
         void onClick(String numberData);
-    }
+    }*/
 
 
 
-    public NumberAdapter(Context context, Cursor cursor, NumberAdapterOnClickHandler clickHandler){
+    public NumberAdapter(Context context, Cursor cursor){
         this.mContext = context;
         this.mCursor = cursor;
-        this.mClickHandler = clickHandler;
+       /* this.mClickHandler = clickHandler;*/
     }
 
     @NonNull
@@ -65,7 +65,7 @@ public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdap
             this.notifyDataSetChanged();
     }
 
-    class NumberAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class NumberAdapterViewHolder extends RecyclerView.ViewHolder{
 
         TextView factTextView;
 
@@ -73,16 +73,15 @@ public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdap
             super(itemView);
             factTextView = itemView.findViewById(R.id.fact_text_view);
 
-            itemView.setOnClickListener(this);
 
         }
 
-        @Override
+        /*@Override
         public void onClick(View view){
             int adapterPosition = getAdapterPosition();
             String numberData = String.valueOf(adapterPosition);
             mClickHandler.onClick(numberData);
-        }
+        }*/
 
     }
 }
