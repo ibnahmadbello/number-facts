@@ -100,7 +100,9 @@ public class MainActivity extends AppCompatActivity implements
         numberRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, numberRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                String fact = ((TextView)numberRecyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.fact_text_view)).getText().toString();
+                String fact = ((TextView)numberRecyclerView.
+                        findViewHolderForAdapterPosition(position).itemView.
+                        findViewById(R.id.fact_text_view)).getText().toString();
                 Intent shareIntent = new Intent(MainActivity.this, ShareActivity.class);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, fact);
                 startActivity(shareIntent);
