@@ -22,10 +22,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.regent.tech.numberisfun.Data.NumberContract;
 import com.regent.tech.numberisfun.Data.NumberDbHelper;
 import com.regent.tech.numberisfun.Utilities.NetworkUtils;
+import com.regent.tech.numberisfun.Utilities.RecyclerTouchListener;
 
 import java.io.IOException;
 import java.net.URL;
@@ -94,6 +96,23 @@ public class MainActivity extends AppCompatActivity implements
                 numberAdapter.swapCursor(getNumberFact());
             }
         }).attachToRecyclerView(numberRecyclerView);
+
+        numberRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, numberRecyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                String fact = ((TextView)numberRecyclerView.
+                        findViewHolderForAdapterPosition(position).itemView.
+                        findViewById(R.id.fact_text_view)).getText().toString();
+                Intent shareIntent = new Intent(MainActivity.this, ShareActivity.class);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, fact);
+                startActivity(shareIntent);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         getSupportLoaderManager().initLoader(NUMBER_SEARCH_LOADER, null, this);
 
@@ -299,4 +318,10 @@ public class MainActivity extends AppCompatActivity implements
                 NumberContract.NumberEntry._ID + "=" + id, null) > 0;
     }
 
+    /*@Override
+    public void onClick(String numberData) {
+        Intent startShareActivity = new Intent(this, ShareActivity.class);
+        startShareActivity.putExtra(Intent.EXTRA_TEXT, numberData);
+        startActivity(startShareActivity);
+    }*/
 }

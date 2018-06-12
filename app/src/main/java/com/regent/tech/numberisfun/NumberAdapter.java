@@ -16,9 +16,20 @@ public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdap
     private Cursor mCursor;
     private Context mContext;
 
+    /*private String mNumberData;
+
+    private final NumberAdapterOnClickHandler mClickHandler;
+
+    public interface NumberAdapterOnClickHandler{
+        void onClick(String numberData);
+    }*/
+
+
+
     public NumberAdapter(Context context, Cursor cursor){
         this.mContext = context;
         this.mCursor = cursor;
+       /* this.mClickHandler = clickHandler;*/
     }
 
     @NonNull
@@ -61,7 +72,16 @@ public class NumberAdapter extends RecyclerView.Adapter<NumberAdapter.NumberAdap
         public NumberAdapterViewHolder(View itemView){
             super(itemView);
             factTextView = itemView.findViewById(R.id.fact_text_view);
+
+
         }
+
+        /*@Override
+        public void onClick(View view){
+            int adapterPosition = getAdapterPosition();
+            String numberData = String.valueOf(adapterPosition);
+            mClickHandler.onClick(numberData);
+        }*/
 
     }
 }
