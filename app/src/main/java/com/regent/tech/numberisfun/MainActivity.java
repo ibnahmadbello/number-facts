@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements
                 Intent shareIntent = new Intent(MainActivity.this, ShareActivity.class);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, fact);
                 startActivity(shareIntent);
+                finish();
             }
 
             @Override

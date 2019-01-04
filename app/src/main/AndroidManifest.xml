@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ShareActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity">
+            <intent-filter android:label="@string/share">
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
